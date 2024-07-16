@@ -1,0 +1,1 @@
+prod_eks_ec2_ssh_key_name = "prod_eks_ec2_ssh_key"
