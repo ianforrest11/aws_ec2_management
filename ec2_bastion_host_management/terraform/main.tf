@@ -5,7 +5,6 @@ module "prod_eks_ec2_bastion_host" {
   subnet_id                   = data.aws_subnet.default_vpc_public_subnet_1.id
   vpc_id                      = data.aws_vpc.default_vpc.id
   key_name                    = data.aws_key_pair.prod_eks_ec2_ssh_key.key_name
-  allowed_ssh_cidr_blocks     = var.prod_allowed_ssh_cidr_blocks
   associate_public_ip_address = var.prod_associate_public_ip_address
   instance_name               = var.prod_instance_name
   environment                 = var.prod_environment
