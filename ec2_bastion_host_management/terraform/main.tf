@@ -9,5 +9,6 @@ module "prod_eks_ec2_bastion_host" {
   associate_public_ip_address = var.prod_associate_public_ip_address
   instance_name               = var.prod_instance_name
   environment                 = var.prod_environment
+  security_group_ids          = [data.aws_security_group.prod_ec2_bastion_host_security_group.id]
 }
 
