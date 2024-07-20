@@ -14,8 +14,8 @@ jobs:
     name: Init and Plan Terraform ec2_key_pair_management
     runs-on: ubuntu-latest
     env:
-      ENVIRONMENT: ${{ github.ref_name == 'main' && 'production'}}
-      VAR_FILE: ${{ github.ref_name == 'main' && '../variables/production.tfvars'}}
+      ENVIRONMENT: ${{ github.ref_name == 'main' && 'production' }}
+      VAR_FILE: ${{ github.ref_name == 'main' && '../variables/production.tfvars' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -51,9 +51,10 @@ jobs:
   terraform-init-plan-ec2-bastion-host:
     name: Init and Plan Terraform ec2_bastion_host_management
     runs-on: ubuntu-latest
+    needs: terraform-init-plan-ec2-key-pair  # Ensure this job runs after the key pair job
     env:
-      ENVIRONMENT: ${{ github.ref_name == 'main' && 'production'}}
-      VAR_FILE: ${{ github.ref_name == 'main' && '../variables/production.tfvars'}}
+      ENVIRONMENT: ${{ github.ref_name == 'main' && 'production' }}
+      VAR_FILE: ${{ github.ref_name == 'main' && '../variables/production.tfvars' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
