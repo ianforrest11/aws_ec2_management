@@ -1,10 +1,10 @@
-variable "prod_ami_id" {}
+# global variables
+variable "ami_id" {}
+variable "instance_type" {}
+variable "associate_public_ip_address" {}
 
-variable "prod_instance_type" {}
+# environment variable
+variable "environment" {}
 
-variable "prod_associate_public_ip_address" {}
-
-variable "prod_instance_name" {}
-
-variable "prod_environment" {}
-
+# environment-specific variables
+variable "instance_name" {}

@@ -11,6 +11,9 @@ jobs:
   terraform-destroy-ec2-key-pair:
     name: Destroy Terraform ec2_key_pair_management
     runs-on: ubuntu-latest
+    env:
+      ENVIRONMENT: ${{ github.ref_name == 'main' && 'production'}}
+      VAR_FILE: ${{ github.ref_name == 'main' && '../variables/production.tfvars'}}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -28,19 +31,23 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
         with:
-          role-to-assume: arn:aws:iam::128333337075:role/GitHubActionRunner
+          role-to-assume: ${{ secrets.RUNNER_ROLE_ARN }}
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
-          aws-region: us-east-1
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Init and Destroy Terraform ec2_key_pair_management
         run: |
           cd ec2_key_pair_management/terraform
+          sed -i "s/PLACEHOLDER_ENV/${{ env.ENVIRONMENT }}/g" provider.tf
           terraform init
-          terraform destroy -auto-approve -var-file=../variables/terraform.tfvars
+          terraform destroy -auto-approve -var-file=${{ env.VAR_FILE }} -var-file=../variables/global.tfvars
 
   terraform-destroy-bastion-host:
       name: Destroy Terraform ec2_bastion_host_management
       runs-on: ubuntu-latest
+      env:
+        ENVIRONMENT: ${{ github.ref_name == 'main' && 'production'}}
+        VAR_FILE: ${{ github.ref_name == 'main' && '../variables/production.tfvars'}}
       steps:
         - name: Checkout repository
           uses: actions/checkout@v2
@@ -58,12 +65,13 @@ jobs:
         - name: Configure AWS Credentials
           uses: aws-actions/configure-aws-credentials@v1.7.0
           with:
-            role-to-assume: arn:aws:iam::128333337075:role/GitHubActionRunner
+            role-to-assume: ${{ secrets.RUNNER_ROLE_ARN }}
             role-session-name: GitHub_to_AWS_via_FederatedOIDC
-            aws-region: us-east-1
+            aws-region: ${{ secrets.AWS_REGION }}
 
         - name: Init and Destroy Terraform ec2_bastion_host_management
           run: |
             cd ec2_bastion_host_management/terraform
+            sed -i "s/PLACEHOLDER_ENV/${{ env.ENVIRONMENT }}/g" provider.tf
             terraform init
-            terraform destroy -auto-approve -var-file=../variables/prod.tfvars
+            terraform destroy -auto-approve -var-file=${{ env.VAR_FILE }} -var-file=../variables/global.tfvars
